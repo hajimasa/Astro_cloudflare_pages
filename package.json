@@ -25,7 +25,8 @@
     "astro": "^2.3.0",
     "astro-compress": "^1.1.24",
     "astro-purgecss": "^2.0.0",
-    "astro-seo": "^0.7.0"
+    "astro-seo": "^0.7.0",
+    "microcms-js-sdk": "^2.3.3"
   },
   "devDependencies": {
     "@markuplint/astro-parser": "^3.0.0",

@@ -1,14 +1,29 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+
+//microCMS呼び出し
+import { getBlogs } from "../library/microcms";
+const response = await getBlogs({ fields: ["id", "title"] });
 ---
 
+<Layout title="My first blog with Astro">
+  <main>
+    <ul>
+      {
+        response.contents.map((content: any) => (
+          <li>
+            <a href={content.id}>{content.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
+
 <style>
-  h1 {
-    font-family: sans-serif;
-    font-size: 2.4em;
+  main {
+    margin: auto;
+    padding: 1em;
+    max-width: 60ch;
   }
 </style>
-
-<Layout title="Welcome to Astro" description="Build faster websites with Astro">
-  <h1>Astro css modules</h1>
-</Layout>
