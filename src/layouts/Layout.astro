@@ -1,0 +1,24 @@
+---
+import { SEO, Props as AstroSeoProps } from 'astro-seo';
+
+export type Props = AstroSeoProps & {
+  title: string;
+  description: string;
+};
+
+const { title, description, ...seoProps }: Props = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <SEO {...seoProps} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
