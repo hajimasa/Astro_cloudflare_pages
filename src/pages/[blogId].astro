@@ -1,0 +1,45 @@
+---
+import Layout from "../layouts/BlogPost.astro";
+// import pkg from "microcms-richedit-processer";
+// const { processer } = pkg;
+
+//microCMS呼び出し
+import { getBlogs,getBlogDetail } from "../library/microcms";
+
+// 生成する記事のIDを全て取得
+export async function getStaticPaths() {
+  const response = await getBlogs(Astro.request,{ orders: "-publishedAt" });
+  return response.contents.map((content: any) => ({
+    params: {
+      blogId: content.id,
+    },
+    props: {
+      blog: content,
+    },
+  }));
+}
+
+//記事の詳細情報を取得
+const { blogId } = Astro.params;
+// const { blog } = Astro.props;
+const blog = await getBlogDetail(Astro.request,blogId as string);
+---
+
+<Layout
+  content={{
+    title: blog.title,
+    description: "",
+    heroImage: blog.eyecatch?.url ?? "",
+    pubDate: new Date(blog.publishedAt).toLocaleDateString("ja-JP"),
+    updatedDate: new Date(blog.updatedAt).toLocaleDateString("ja-JP"),
+  }}
+>
+  <!-- <main
+    id="main"
+    set:html={processer(blog.content, { img: { parameters: { fm: "webp" } } })}
+  /> -->
+  <main id="main" set:html={blog.content} />
+</Layout>
+<script>
+  import "lazysizes";
+</script>
