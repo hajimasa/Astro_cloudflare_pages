@@ -1,89 +1,29 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
+import Layout from "../layouts/Layout.astro";
 
 //microCMS呼び出し
 import { getBlogs } from "../library/microcms";
-// import { cmsBlog } from "../library/microcms";
-
-// import { createClient } from "microcms-js-sdk";
-// import type { MicroCMSQueries } from "microcms-js-sdk";
-// import type { Blog, BlogResponse } from "../library/microcms";
-
-// const client = createClient({
-//   serviceDomain: "import.meta.env.MICROCMS_SERVICE_DOMAIN",
-//   apiKey: "import.meta.env.MICROCMS_API_KEY",
-// });
-
-// export const getBlogs = async (queries?: MicroCMSQueries) => {
-//   const data = await client.get<BlogResponse>({ endpoint: "blogs", queries });
-
-//   if (data.offset + data.limit < data.totalCount) {
-//     queries ? (queries.offset = data.offset + data.limit) : "";
-//     const result: BlogResponse = await getBlogs(queries);
-//     return {
-//       offset: result.offset,
-//       limit: result.limit,
-//       contents: [...data.contents, ...result.contents],
-//       totalCount: result.totalCount,
-//     };
-//   }
-//   return data;
-// };
-
-const { contents: posts, totalCount } = await getBlogs(Astro.request,{
-  orders: "-publishedAt",
-});
-
-// // Use Astro.glob() to fetch all posts, and then sort them by date.
-// const posts = (await Astro.glob('./blog/*.{md,mdx}')).sort(
-// 	(a, b) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf()
-// );
+const response = await getBlogs(Astro.request, { fields: ["id", "title"] });
 ---
 
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    <style>
-      ul {
-        list-style-type: none;
-        padding: unset;
+<Layout title="My first blog with Astro">
+  <main>
+    <ul>
+      {
+        response.contents.map((content: any) => (
+          <li>
+            <a href={content.id}>{content.title}</a>
+          </li>
+        ))
       }
-      ul li {
-        display: flex;
-      }
-      ul li time {
-        flex: 0 0 130px;
-        font-style: italic;
-        color: #595959;
-      }
-      ul li a:visited {
-        color: #8e32dc;
-      }
-    </style>
-  </head>
-  <body>
-    <Header />
-    <main>
-      <h1>{totalCount}</h1>
-      <section>
-        <ul>
-          {
-            posts.map((post) => (
-              <li>
-                <time datetime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString("ja-JP")}
-                </time>
-                <a href={`/blog/${post.id}`}>{post.title}</a>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
-    </main>
-    <Footer />
-  </body>
-</html>
+    </ul>
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1em;
+    max-width: 60ch;
+  }
+</style>

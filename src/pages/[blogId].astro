@@ -1,5 +1,5 @@
 ---
-import Layout from "../layouts/BlogPost.astro";
+import Layout from "../layouts/Layout.astro";
 // import pkg from "microcms-richedit-processer";
 // const { processer } = pkg;
 
@@ -40,6 +40,3 @@ const blog = await getBlogDetail(Astro.request,blogId as string);
   /> -->
   <main id="main" set:html={blog.content} />
 </Layout>
-<script>
-  import "lazysizes";
-</script>
